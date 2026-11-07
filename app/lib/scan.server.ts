@@ -40,7 +40,14 @@ async function gql(graphql: AdminGraphql, query: string, variables?: Record<stri
 }
 
 export async function getShopContext(graphql: AdminGraphql): Promise<ShopContext> {
-  const data = await gql(graphql, SHOP_QUERY);
+  let data: any;
+  try {
+    data = await gql(graphql, SHOP_QUERY);
+  } catch (e) {
+    // Without the read_legal_policies scope we can't check policies; don't penalise the store for that.
+    console.warn("shop policies unavailable, skipping policy rule", String(e).slice(0, 200));
+    return { policiesComplete: true, missingPolicies: [] };
+  }
   const present = new Set(
     (data?.shop?.shopPolicies ?? [])
       .filter((p: { body?: string }) => (p.body ?? "").replace(/<[^>]*>/g, "").trim().length > 0)
