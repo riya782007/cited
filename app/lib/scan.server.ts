@@ -1,28 +1,34 @@
 import db from "../db.server";
 import { scoreProduct, type ProductInput, type ShopContext } from "./scoring";
 
-type AdminGraphql = (query: string, opts?: { variables?: Record<string, unknown> }) => Promise<Response>;
+export type AdminGraphql = (query: string, opts?: { variables?: Record<string, unknown> }) => Promise<Response>;
 
-const PRODUCTS_QUERY = `#graphql
-  query CitedScanProducts($cursor: String) {
-    products(first: 50, after: $cursor) {
-      pageInfo { hasNextPage endCursor }
-      nodes {
+const PRODUCT_FIELDS = `
         id
         title
         handle
         vendor
         productType
         descriptionHtml
-        category { fullName }
+        category { id fullName }
         options { name }
         variants(first: 100) {
           nodes { barcode sku price compareAtPrice inventoryItem { tracked } }
         }
         media(first: 20) { nodes { alt mediaContentType } }
-        metafields(first: 50, namespace: "shopify") { nodes { key value } }
-      }
+        metafields(first: 50, namespace: "shopify") { nodes { key value } }`;
+
+const PRODUCTS_QUERY = `#graphql
+  query CitedScanProducts($cursor: String) {
+    products(first: 50, after: $cursor) {
+      pageInfo { hasNextPage endCursor }
+      nodes { ${PRODUCT_FIELDS} }
     }
+  }`;
+
+const PRODUCT_QUERY = `#graphql
+  query CitedProduct($id: ID!) {
+    product(id: $id) { ${PRODUCT_FIELDS} }
   }`;
 
 const SHOP_QUERY = `#graphql
@@ -32,7 +38,7 @@ const SHOP_QUERY = `#graphql
 
 const REQUIRED_POLICIES = ["REFUND_POLICY", "PRIVACY_POLICY", "TERMS_OF_SERVICE", "SHIPPING_POLICY"];
 
-async function gql(graphql: AdminGraphql, query: string, variables?: Record<string, unknown>) {
+export async function gql(graphql: AdminGraphql, query: string, variables?: Record<string, unknown>) {
   const res = await graphql(query, variables ? { variables } : undefined);
   const json = (await res.json()) as { data?: any; errors?: unknown };
   if (json.errors) throw new Error(`Shopify GraphQL error: ${JSON.stringify(json.errors)}`);
@@ -114,4 +120,32 @@ export async function runScan(shop: string, graphql: AdminGraphql) {
     data: { lastScanAt: new Date(), productCount: count, avgScore },
   });
   return { count, avgScore, missingPolicies: shopCtx.missingPolicies };
+}
+
+/** Fetches one product straight from Shopify (raw node, includes category id). */
+export async function fetchProduct(graphql: AdminGraphql, id: string) {
+  const data = await gql(graphql, PRODUCT_QUERY, { id });
+  return data.product as any | null;
+}
+
+/** Re-scores a single product (after a fix or undo) and refreshes the shop average. */
+export async function rescanProduct(shop: string, graphql: AdminGraphql, id: string) {
+  const shopCtx = await getShopContext(graphql);
+  const n = await fetchProduct(graphql, id);
+  if (!n) {
+    await db.productSnapshot.deleteMany({ where: { shop, id } });
+  } else {
+    const input = toInput(n);
+    const { score, failed } = scoreProduct(input, shopCtx);
+    await db.productSnapshot.upsert({
+      where: { id },
+      create: { id, shop, title: input.title, handle: input.handle, data: input as any, score, failedRules: failed },
+      update: { title: input.title, handle: input.handle, data: input as any, score, failedRules: failed },
+    });
+  }
+  const agg = await db.productSnapshot.aggregate({ where: { shop }, _avg: { score: true }, _count: true });
+  await db.shop.update({
+    where: { shop },
+    data: { productCount: agg._count, avgScore: agg._avg.score == null ? null : Math.round(agg._avg.score) },
+  });
 }

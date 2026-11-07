@@ -43,18 +43,22 @@ export default function Products() {
               <s-table-header listSlot="primary">Product</s-table-header>
               <s-table-header>Score</s-table-header>
               <s-table-header>What's missing</s-table-header>
+              <s-table-header></s-table-header>
             </s-table-header-row>
             <s-table-body>
               {products.map((p) => (
                 <s-table-row key={p.id}>
                   <s-table-cell>
-                    <s-link href={`shopify://admin/products/${p.numericId}`} target="_blank">{p.title}</s-link>
+                    <s-link href={`/app/products/${p.numericId}`}>{p.title}</s-link>
                   </s-table-cell>
                   <s-table-cell>
                     <s-badge tone={tone(p.score)}>{p.score}</s-badge>
                   </s-table-cell>
                   <s-table-cell>
                     {p.gaps.length === 0 ? "Nothing — ready for AI agents" : p.gaps.join(" · ") + (p.more ? ` · +${p.more} more` : "")}
+                  </s-table-cell>
+                  <s-table-cell>
+                    {p.gaps.length > 0 && <s-button href={`/app/products/${p.numericId}`}>Fix</s-button>}
                   </s-table-cell>
                 </s-table-row>
               ))}

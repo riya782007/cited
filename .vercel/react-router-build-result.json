@@ -24,6 +24,8 @@
       "routes/terms": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/docs": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/app.products._index": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/app.products.$id": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/app.history": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/app._index": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
     },
     "routes": {
@@ -167,6 +169,24 @@
           "runtime": "nodejs"
         }
       },
+      "routes/app.products.$id": {
+        "id": "routes/app.products.$id",
+        "parentId": "routes/app",
+        "file": "app/routes/app.products.$id.tsx",
+        "path": "products/:id",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
+      "routes/app.history": {
+        "id": "routes/app.history",
+        "parentId": "routes/app",
+        "file": "app/routes/app.history.tsx",
+        "path": "history",
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
       "routes/app._index": {
         "id": "routes/app._index",
         "parentId": "routes/app",
@@ -288,6 +308,18 @@
         "path": "products",
         "index": true
       },
+      "routes/app.products.$id": {
+        "id": "routes/app.products.$id",
+        "parentId": "routes/app",
+        "file": "routes/app.products.$id.tsx",
+        "path": "products/:id"
+      },
+      "routes/app.history": {
+        "id": "routes/app.history",
+        "parentId": "routes/app",
+        "file": "routes/app.history.tsx",
+        "path": "history"
+      },
       "routes/app._index": {
         "id": "routes/app._index",
         "parentId": "routes/app",
@@ -385,6 +417,16 @@
                 "file": "routes/app.products._index.tsx",
                 "path": "products",
                 "index": true
+              },
+              {
+                "id": "routes/app.products.$id",
+                "file": "routes/app.products.$id.tsx",
+                "path": "products/:id"
+              },
+              {
+                "id": "routes/app.history",
+                "file": "routes/app.history.tsx",
+                "path": "history"
               },
               {
                 "id": "routes/app._index",
