@@ -1,0 +1,4 @@
+{
+  "regions": ["bom1"],
+  "buildCommand": "prisma generate && react-router build"
+}

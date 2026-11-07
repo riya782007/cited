@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Shopify sessions (offline tokens are expiring; refreshToken is stored too)
+model Session {
+  id                  String    @id
+  shop                String
+  state               String
+  isOnline            Boolean   @default(false)
+  scope               String?
+  expires             DateTime?
+  accessToken         String
+  userId              BigInt?
+  firstName           String?
+  lastName            String?
+  email               String?
+  accountOwner        Boolean   @default(false)
+  locale              String?
+  collaborator        Boolean?  @default(false)
+  emailVerified       Boolean?  @default(false)
+  refreshToken        String?
+  refreshTokenExpires DateTime?
+
+  @@index([shop])
+}
+
+// One row per installed store
+model Shop {
+  shop                String    @id
+  installedAt         DateTime  @default(now())
+  uninstalledAt       DateTime?
+  plan                String    @default("free")
+  onboardingDismissed Boolean   @default(false)
+  lastScanAt          DateTime?
+  productCount        Int       @default(0)
+  avgScore            Int?
+}
+
+// Latest copy of each product's data used for scoring
+model ProductSnapshot {
+  id          String   @id // Shopify product GID
+  shop        String
+  title       String
+  handle      String?
+  data        Json
+  score       Int?
+  failedRules String[]
+  updatedAt   DateTime @updatedAt
+
+  @@index([shop])
+  @@index([shop, score])
+}
+
+// Every change Cited writes, with the old value, so it can be undone
+model Change {
+  id         String    @id @default(cuid())
+  shop       String
+  productId  String
+  field      String
+  before     Json
+  after      Json
+  status     String    @default("applied") // applied | undone
+  createdAt  DateTime  @default(now())
+  undoneAt   DateTime?
+
+  @@index([shop, productId])
+}
