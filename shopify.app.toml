@@ -1,4 +1,4 @@
-# Cited by Newvora — Shopify app configuration (deployed by GitHub Actions)
+# Cited by Newvora — Shopify app configuration (deployed by GitHub Actions on change)
 client_id = "249c0ef1514eb4e1a20cdc8ea95d146b"
 name = "Cited by Newvora"
 application_url = "https://cited.newvora.in"
