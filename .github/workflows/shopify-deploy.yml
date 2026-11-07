@@ -2,6 +2,8 @@ name: Deploy app config to Shopify
 
 # Pushes shopify.app.toml (scopes, URLs, webhooks incl. compliance topics)
 # and any extensions to Shopify as a new app version.
+# Auth: a Shopify service account token (App development permission) stored
+# as the repo secret SHOPIFY_SERVICE_ACCOUNT_TOKEN.
 on:
   workflow_dispatch:
   push:
@@ -32,6 +34,6 @@ jobs:
         run: npm install -g @shopify/cli@latest
       - name: Deploy
         env:
-          SHOPIFY_APP_AUTOMATION_TOKEN: ${{ secrets.SHOPIFY_APP_AUTOMATION_TOKEN }}
+          SHOPIFY_SERVICE_ACCOUNT_TOKEN: ${{ secrets.SHOPIFY_SERVICE_ACCOUNT_TOKEN }}
           COMMIT_URL: ${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}
         run: shopify app deploy --allow-updates --source-control-url "$COMMIT_URL"
