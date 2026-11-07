@@ -23,6 +23,7 @@
       "routes/auth.$": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/terms": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/docs": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/app.products._index": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/app._index": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
     },
     "routes": {
@@ -156,6 +157,16 @@
         "path": "app",
         "config": {}
       },
+      "routes/app.products._index": {
+        "id": "routes/app.products._index",
+        "parentId": "routes/app",
+        "file": "app/routes/app.products._index.tsx",
+        "path": "products",
+        "index": true,
+        "config": {
+          "runtime": "nodejs"
+        }
+      },
       "routes/app._index": {
         "id": "routes/app._index",
         "parentId": "routes/app",
@@ -270,6 +281,13 @@
         "file": "routes/app.tsx",
         "path": "app"
       },
+      "routes/app.products._index": {
+        "id": "routes/app.products._index",
+        "parentId": "routes/app",
+        "file": "routes/app.products._index.tsx",
+        "path": "products",
+        "index": true
+      },
       "routes/app._index": {
         "id": "routes/app._index",
         "parentId": "routes/app",
@@ -362,6 +380,12 @@
             "file": "routes/app.tsx",
             "path": "app",
             "children": [
+              {
+                "id": "routes/app.products._index",
+                "file": "routes/app.products._index.tsx",
+                "path": "products",
+                "index": true
+              },
               {
                 "id": "routes/app._index",
                 "file": "routes/app._index.tsx",
