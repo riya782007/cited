@@ -1,4 +1,5 @@
 {
   "regions": ["bom1"],
-  "buildCommand": "prisma generate && react-router build"
+  "installCommand": "npm install",
+  "buildCommand": "npx prisma generate && npx react-router build"
 }
