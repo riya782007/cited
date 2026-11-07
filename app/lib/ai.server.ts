@@ -43,6 +43,8 @@ Hard rules:
 - If a fact is missing, do not guess it — list it in missingFacts instead.
 - Title: say clearly what the product is, include brand-neutral key attributes that are in the data (colour, material, size range) when present. 20-150 characters. No ALL CAPS, no emojis, no promotional words like "best" or "amazing".
 - Description: clear, factual, scannable. Start with one sentence saying what it is and who it is for (only if the data supports it). Then a short bullet list of the facts in the data. Keep every fact from the original description. Plain HTML only.
+- Never write filler that only restates the title (e.g. "X is a snowboard."). If the data has fewer than 2 concrete facts beyond the title, return null for descriptionHtml and list the missing facts instead.
+- categoryQuery: name the product itself, not accessories for it (a snowboard is "Snowboards", not "Snowboard Bags").
 - Keep the merchant's language (if the original is in Hindi, write Hindi, etc.).
 - Return null for any field that is already good.`;
 
@@ -109,4 +111,45 @@ export async function suggestFix(product: any, failedLabels: string[]): Promise<
   if (same(parsed.productType, product.productType)) parsed.productType = null;
   if (product.category?.id) parsed.categoryQuery = null;
   return parsed;
+}
+
+/** Picks the best standard category from taxonomy search results (or none). */
+export async function chooseCategory(
+  product: { title: string; productType?: string | null; description: string },
+  candidates: { id: string; fullName: string }[],
+): Promise<string | null> {
+  const key = process.env.OPENAI_API_KEY;
+  if (!key || candidates.length === 0) return null;
+  const res = await fetch("https://api.openai.com/v1/responses", {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${key}` },
+    body: JSON.stringify({
+      model: MODEL,
+      instructions:
+        "Pick the Shopify standard product category that describes the product itself (not an accessory, part or bag for it). Answer with the category id, or null if none fits.",
+      input: JSON.stringify({ product, candidates }),
+      text: {
+        format: {
+          type: "json_schema",
+          name: "category_pick",
+          strict: true,
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            required: ["id"],
+            properties: { id: { type: ["string", "null"] } },
+          },
+        },
+      },
+      store: false,
+    }),
+    signal: AbortSignal.timeout(30_000),
+  });
+  if (!res.ok) return null;
+  const json: any = await res.json();
+  const text =
+    json.output_text ??
+    (json.output ?? []).flatMap((o: any) => o.content ?? []).filter((c: any) => c.type === "output_text").map((c: any) => c.text).join("");
+  const id = JSON.parse(text).id as string | null;
+  return candidates.some((c) => c.id === id) ? id : null;
 }

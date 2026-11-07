@@ -3,8 +3,8 @@
 
 import db from "../db.server";
 import { fetchProduct, gql, rescanProduct, type AdminGraphql } from "./scan.server";
-import { suggestFix } from "./ai.server";
-import { ruleLabel } from "./scoring";
+import { chooseCategory, suggestFix } from "./ai.server";
+import { ruleLabel, stripHtml } from "./scoring";
 
 export const FREE_FIXES_PER_MONTH = 25;
 export const FIELDS = ["title", "descriptionHtml", "productType", "category"] as const;
@@ -19,7 +19,7 @@ export const FIELD_LABEL: Record<Field, string> = {
 
 const TAXONOMY_QUERY = `#graphql
   query CitedTaxonomy($q: String!) {
-    taxonomy { categories(search: $q, first: 5) { nodes { id fullName isLeaf } } }
+    taxonomy { categories(search: $q, first: 10) { nodes { id fullName isLeaf } } }
   }`;
 
 const UPDATE_MUTATION = `#graphql
@@ -70,9 +70,15 @@ export async function generateSuggestions(shop: string, graphql: AdminGraphql, p
   if (s.categoryQuery) {
     try {
       const data = await gql(graphql, TAXONOMY_QUERY, { q: s.categoryQuery });
-      const nodes = data?.taxonomy?.categories?.nodes ?? [];
-      category = nodes.find((n: any) => n.isLeaf) ?? nodes[0] ?? null;
-      if (category) category = { id: category.id, fullName: category.fullName };
+      const nodes: { id: string; fullName: string }[] = (data?.taxonomy?.categories?.nodes ?? []).map((n: any) => ({
+        id: n.id,
+        fullName: n.fullName,
+      }));
+      const pickedId = await chooseCategory(
+        { title: product.title, productType: s.productType ?? product.productType, description: stripHtml(product.descriptionHtml).slice(0, 1000) },
+        nodes,
+      );
+      category = nodes.find((n) => n.id === pickedId) ?? null;
     } catch (e) {
       console.warn("taxonomy search failed", String(e).slice(0, 200));
     }
