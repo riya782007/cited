@@ -143,9 +143,11 @@ export default function ProductFix() {
           </s-paragraph>
           {d.allowance.limit != null && (
             <s-text tone="neutral">
-              {d.allowance.used} of {d.allowance.limit} free AI fixes used this month.
+              {d.allowance.used} of {d.allowance.limit} AI fixes used this month on the{" "}
+              {d.allowance.plan === "free" ? "Free" : "Growth"} plan.
             </s-text>
           )}
+          {outOfFixes && <s-link href="/app/plan">Upgrade for more AI fixes</s-link>}
           {!d.aiReady ? (
             <s-text>AI suggestions aren't available right now.</s-text>
           ) : (

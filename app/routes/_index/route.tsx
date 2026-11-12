@@ -4,7 +4,7 @@ import { PublicLayout, publicStyles as s } from "../../components/PublicLayout";
 
 export const meta: MetaFunction = () => [
   { title: "Cited by Newvora: get your Shopify products recommended by AI shopping agents" },
-  { name: "description", content: "Cited scores every Shopify product for what ChatGPT, Gemini, Copilot and Perplexity need before they recommend it, fixes the gaps with your approval, and shows the revenue AI agents bring in." },
+  { name: "description", content: "Cited scores every Shopify product for what ChatGPT, Gemini, Copilot and Perplexity need before they recommend it, and fixes the gaps with your approval." },
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -37,8 +37,8 @@ export default function Landing() {
           <p>Clearer titles, descriptions and product attributes, written only from facts already in your product data. Every change can be undone.</p>
         </div>
         <div className={s.card}>
-          <h3>AI revenue, measured</h3>
-          <p>See the orders and revenue that come to your store from AI assistants.</p>
+          <h3>Undo anything</h3>
+          <p>Every change Cited makes is logged with the old and new value, and you can undo it in one click.</p>
         </div>
       </div>
       <p className={s.muted} style={{ marginTop: 28 }}>

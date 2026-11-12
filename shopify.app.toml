@@ -8,7 +8,7 @@ embedded = true
 automatically_update_urls_on_dev = false
 
 [access_scopes]
-scopes = "read_products,write_products,read_orders,read_legal_policies"
+scopes = "read_products,write_products,read_legal_policies"
 
 [auth]
 redirect_urls = [

@@ -7,10 +7,10 @@ export default function Terms() {
   return (
     <PublicLayout>
       <h1>Terms of service</h1>
-      <p>Effective 7 November 2026. These terms apply to your use of the Cited Shopify app ("Cited"), provided by Newvora, New Delhi, India ("we"). By installing Cited you agree to them.</p>
+      <p>Effective 12 November 2026. These terms apply to your use of the Cited Shopify app ("Cited"), provided by Newvora, New Delhi, India ("we"). By installing Cited you agree to them.</p>
 
       <h2>The service</h2>
-      <p>Cited analyses your Shopify product data, suggests improvements, applies changes you approve, and reports on orders that come from AI assistants. Suggestions are generated automatically; you are responsible for reviewing them before you approve them.</p>
+      <p>Cited analyses your Shopify product data, suggests improvements, and applies changes you approve. Suggestions are generated automatically; you are responsible for reviewing them before you approve them.</p>
 
       <h2>No guaranteed results</h2>
       <p>AI assistants and search engines decide independently what they show and recommend. Cited aims to improve how your products are understood, but we do not guarantee any ranking, recommendation, traffic or revenue.</p>

@@ -24,7 +24,7 @@ export default function Docs() {
       </ul>
 
       <h2>3. Review and approve fixes</h2>
-      <p>For each product, Cited can suggest a clearer title, description and attributes, using only facts already in your product data. You see a before-and-after comparison and decide. Every approved change is logged and can be undone in one click.</p>
+      <p>For each product, Cited can suggest a clearer title, description, product type and Shopify standard category, using only facts already in your product data. You see a before-and-after comparison and decide. Every approved change is logged and can be undone in one click.</p>
 
       <h2>4. Turn on Agentic Storefronts</h2>
       <p>Shopify's Agentic Storefronts sales channel makes eligible products available inside AI assistants. In Shopify admin, go to <b>Settings → Apps and sales channels</b> and look for <b>Agentic storefronts</b>. Cited's score helps your products qualify and perform there.</p>

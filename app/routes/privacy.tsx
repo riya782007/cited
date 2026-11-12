@@ -7,7 +7,7 @@ export default function Privacy() {
   return (
     <PublicLayout>
       <h1>Privacy policy</h1>
-      <p>Effective 7 November 2026. This policy explains what data the Cited Shopify app ("Cited"), made by Newvora, New Delhi, India ("we"), collects from merchants who install it, how we use it, and how it is deleted.</p>
+      <p>Effective 12 November 2026. This policy explains what data the Cited Shopify app ("Cited"), made by Newvora, New Delhi, India ("we"), collects from merchants who install it, how we use it, and how it is deleted.</p>
 
       <h2>What we collect</h2>
       <ul>
@@ -15,11 +15,11 @@ export default function Privacy() {
         <li><b>Access credentials:</b> the access token Shopify issues so Cited can work with your store. It is stored encrypted at rest and never shared.</li>
         <li><b>Product data:</b> titles, descriptions, categories, variants, images and their alt text, product metafields and related fields, so we can score products and suggest fixes.</li>
         <li><b>Change history:</b> the before and after values of every change you approve, so you can undo it.</li>
-        <li><b>Order source data:</b> for the AI revenue feature, the sales channel, referring site, order total and date of orders. We do not store your customers' names, emails, phone numbers or addresses.</li>
+        <li><b>No customer data:</b> Cited does not access or store your customers' names, emails, phone numbers, addresses or orders.</li>
       </ul>
 
       <h2>How we use it</h2>
-      <p>Only to provide Cited's features to you: scoring your catalog, generating suggested product text, applying changes you approve, reporting AI-referred revenue, and supporting you. We do not sell your data or use it for advertising.</p>
+      <p>Only to provide Cited's features to you: scoring your catalog, generating suggested product text, applying changes you approve, and supporting you. We do not sell your data or use it for advertising.</p>
 
       <h2>Service providers</h2>
       <p>Your data is stored in a database hosted by Supabase in Mumbai, India, and the app runs on Vercel. When you ask Cited to suggest product text, the relevant product fields are sent to an AI model provider to generate the suggestion; we only use AI providers whose API terms do not allow them to train their models on the data we send. These providers process data only on our behalf.</p>

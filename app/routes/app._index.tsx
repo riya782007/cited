@@ -76,12 +76,15 @@ export default function Index() {
   return (
     <s-page heading="Cited">
       {!d.onboardingDismissed && (
-        <s-banner heading="Get your catalog ready for AI shopping agents" tone="info" dismissible
-          onDismiss={() => fetcher.submit({ intent: "dismiss" }, { method: "post" })}>
+        <s-banner heading="Get your catalog ready for AI shopping agents" tone="info">
           <s-paragraph>
-            1. Check your Agent-Readiness Score below. 2. Open Products to see what each product is missing.
-            3. Turn on Agentic Storefronts in Settings → Apps and sales channels. Nothing in your store changes unless you approve it.
+            1. Check your Agent-Readiness Score below. 2. Open Products and click Fix to get AI suggestions for a
+            product. 3. Turn on Agentic Storefronts in Settings → Apps and sales channels so AI agents can find your
+            products. Nothing in your store changes unless you apply a suggestion.
           </s-paragraph>
+          <s-button slot="secondary-actions" onClick={() => fetcher.submit({ intent: "dismiss" }, { method: "post" })}>
+            Dismiss
+          </s-button>
         </s-banner>
       )}
 

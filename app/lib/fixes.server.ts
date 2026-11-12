@@ -6,7 +6,8 @@ import { fetchProduct, gql, rescanProduct, type AdminGraphql } from "./scan.serv
 import { chooseCategory, suggestFix } from "./ai.server";
 import { ruleLabel, stripHtml } from "./scoring";
 
-export const FREE_FIXES_PER_MONTH = 25;
+import { PLANS, type PlanId } from "./plan.server";
+
 export const FIELDS = ["title", "descriptionHtml", "productType", "category"] as const;
 export type Field = (typeof FIELDS)[number];
 
@@ -46,9 +47,9 @@ export async function fixesUsedThisMonth(shop: string) {
 
 export async function fixAllowance(shop: string) {
   const s = await db.shop.findUnique({ where: { shop }, select: { plan: true } });
-  const plan = s?.plan ?? "free";
+  const plan: PlanId = (s?.plan ?? "free") in PLANS ? ((s?.plan ?? "free") as PlanId) : "free";
   const used = await fixesUsedThisMonth(shop);
-  const limit = plan === "free" ? FREE_FIXES_PER_MONTH : null;
+  const limit = PLANS[plan].fixesPerMonth;
   return { plan, used, limit, remaining: limit == null ? null : Math.max(0, limit - used) };
 }
 
@@ -57,7 +58,9 @@ export async function generateSuggestions(shop: string, graphql: AdminGraphql, p
   const already = await db.change.count({ where: { shop, productId, createdAt: { gte: monthStart() } } });
   const allowance = await fixAllowance(shop);
   if (!already && allowance.remaining === 0) {
-    throw new Error(`You've used all ${FREE_FIXES_PER_MONTH} free AI fixes this month.`);
+    throw new Error(
+      `You've used all ${allowance.limit} AI fixes on your plan this month. Upgrade on the Plan page for more.`,
+    );
   }
 
   const product = await fetchProduct(graphql, productId);

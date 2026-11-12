@@ -26,7 +26,8 @@
       "routes/app.products._index": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/app.products.$id": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
       "routes/app.history": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
-      "routes/app._index": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
+      "routes/app._index": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0",
+      "routes/app.plan": "nodejs_eyJydW50aW1lIjoibm9kZWpzIn0"
     },
     "routes": {
       "root": {
@@ -195,6 +196,15 @@
         "config": {
           "runtime": "nodejs"
         }
+      },
+      "routes/app.plan": {
+        "id": "routes/app.plan",
+        "parentId": "routes/app",
+        "file": "app/routes/app.plan.tsx",
+        "path": "plan",
+        "config": {
+          "runtime": "nodejs"
+        }
       }
     }
   },
@@ -325,6 +335,12 @@
         "parentId": "routes/app",
         "file": "routes/app._index.tsx",
         "index": true
+      },
+      "routes/app.plan": {
+        "id": "routes/app.plan",
+        "parentId": "routes/app",
+        "file": "routes/app.plan.tsx",
+        "path": "plan"
       }
     },
     "routeDiscovery": {
@@ -432,6 +448,11 @@
                 "id": "routes/app._index",
                 "file": "routes/app._index.tsx",
                 "index": true
+              },
+              {
+                "id": "routes/app.plan",
+                "file": "routes/app.plan.tsx",
+                "path": "plan"
               }
             ]
           }
